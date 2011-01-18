@@ -38,7 +38,6 @@ int main(void)
 	printf ("keyboard name :%s\n",name);
 
 	int x = 0, y = 0;
-	//for (i = 0; i < 100;) {
 	while (1) {
 	read(fd, &event, sizeof(struct input_event));
 	    if (event.type == 3) {
@@ -47,10 +46,6 @@ int main(void)
 		if (event.code == 1)
 			y = event.value;
 		if (x && y) {
-	//		printf("[%d] %s ", i, ctime(&event.time.tv_sec));
-			//printf("[%d] %d\t", i, event.type);
-			//printf("%d\t", event.code);
-			//printf("%d\n", event.value);
 			printf("%d %d          \r", x, y);
 			fflush(NULL);
 			++i;
@@ -58,13 +53,6 @@ int main(void)
 		}
 	    }
 	}
-
-//	grab_keyboard =1;
-//	if(ioctl(fd,EVIOCGRAB,&grab_keyboard)){
-//		perror("grab keyboard error");
-//	}
-
-//	scanf ("%d",&grab_keyboard );
 
 	printf("\n");
 	return 0;
