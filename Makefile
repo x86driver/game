@@ -1,4 +1,4 @@
-TARGET = game
+TARGET = game event
 CPU = arm
 #CPU = x86
 
@@ -10,12 +10,15 @@ CC = gcc
 CFLAGS = -D_PC_
 endif
 
-CFLAGS += -O2
+CFLAGS += -Wall -O2
 
 all:$(TARGET)
 
 game:game.c Makefile
-	$(CC) -Wall -o $@ $< $(CFLAGS)
+	$(CC) -o $@ $< $(CFLAGS)
+
+event:event.c
+	$(CC) -o $@ $< $(CFLAGS)
 
 clean:
 	rm -rf $(TARGET)
