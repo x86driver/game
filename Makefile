@@ -1,4 +1,4 @@
-TARGET = game event
+TARGET = game
 CPU = arm
 #CPU = x86
 
