@@ -54,10 +54,15 @@ void send_event(int fd, int x, int y)
 	set_event(0, 0, 0);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
 	char name[256]="Unknown";
 	struct input_event event;
+
+	if (argc < 3) {
+		printf("Usage: %s count delay\n", argv[0]);
+		exit(1);
+	}
 
 	fd=open(EVENT, O_RDWR);
 	if (fd<0) {
@@ -73,30 +78,38 @@ int main(void)
 
 	printf ("keyboard name :%s\n",name);
 
-	send_event(fd, 1044, 2951);
-//	ioctl(fd, EVIOCSKEYCODE, 330);
+	int from_x = 300;
+	int from_y = 1200;
+
+	int shift_x = 350;
+	int shift_y = 350;
+
 /*
-	int x = 0, y = 0;
-	int i = 0;
-	while (1) {
-	read(fd, &event, sizeof(struct input_event));
+	int ix = atoi(argv[1]);
+	int iy = atoi(argv[2]);
 
-	    if (event.type == 3) {
-		if (event.code == 0)
-			x = event.value;
-		if (event.code == 1)
-			y = event.value;
-		if (x && y) {
-			printf("\r%d %d          ", x, y);
-			fflush(NULL);
-			++i;
-			x = y = 0;
-		}
-	    }
-
-		printf("[%d] %d\t%d\t%d\n", i++, event.type, event.code, event.value);
-	}
+	int x = (from_x + ix*shift_x);
+	int y = (from_y + iy*shift_y);
+	printf("x: %d y: %d\n", x, y);
 */
+
+	int x, y;
+	int i, j;
+	int count;
+    for (count = 0; count < atoi(argv[1]); ++count) {
+	for (i = 0; i < 5; ++i) {
+		for (j = 0; j < 5; ++j) {
+			x = (from_x + j*shift_x);
+			y = (from_y + i*shift_y);
+			send_event(fd, x, y);
+			usleep(atoi(argv[2]));
+		}
+	}
+    }
+
+//	send_event(fd, x, y);
+//	send_event(fd, 1044, 2951);
+
 	printf("\n");
 	return 0;
 }
