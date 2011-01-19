@@ -1,7 +1,9 @@
 TARGET = game frame rgb
 CPU = arm
 #CPU = x86
+
 ARMCC = arm-none-linux-gnueabi-gcc
+GCC = gcc
 
 ifeq ($(CPU),arm)
 CC = arm-none-linux-gnueabi-gcc
@@ -15,7 +17,7 @@ CFLAGS += -Wall -O2
 
 all:$(TARGET)
 
-game:game.c Makefile
+game:game.c
 	$(CC) -o $@ $< $(CFLAGS)
 
 event:event.c
@@ -25,7 +27,7 @@ frame:frame.c
 	$(ARMCC) -o $@ $< $(CFLAGS)
 
 rgb:rgb.c
-	$(CC) -o $@ $< $(CFLAGS)
+	$(GCC) -o $@ $< -Wall -g
 
 clean:
 	rm -rf $(TARGET)

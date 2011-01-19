@@ -9,6 +9,8 @@
 #define RGB565_MASK_GREEN                         0x07E0
 #define RGB565_MASK_BLUE                         0x001F
 
+#define THRESHOLD 247
+
 void rgb565_2_rgb24(unsigned char *rgb24, unsigned short *rgb565)
 {
 	unsigned int i = 0;
@@ -28,10 +30,30 @@ void rgb565_2_rgb24(unsigned char *rgb24, unsigned short *rgb565)
 	}
 }
 
+void threshold(int thres, unsigned char *rgb24)
+{
+	unsigned int i = 0;
+	unsigned char R, G, B;
+	for (i = 0; i < WIDTH*HEIGHT; ++i) {
+		R = *rgb24;
+		G = *(rgb24+1);
+		B = *(rgb24+2);
+		if (R > thres && G > thres && B > thres) {
+			*rgb24++ = 0xff;
+			*rgb24++ = 0xff;
+			*rgb24++ = 0xff;
+		} else {
+			*rgb24++ = 0;
+			*rgb24++ = 0;
+			*rgb24++ = 0;
+		}
+	}
+}
+
 int main(int argc, char **argv)
 {
 	if (argc < 2) {
-		printf("Usage: %s file\n", argv[0]);
+		printf("Usage: %s [file]\n", argv[0]);
 		exit(1);
 	}
 
@@ -48,6 +70,7 @@ int main(int argc, char **argv)
 
 	fread(image565, size565, 1, fp);
 	rgb565_2_rgb24(image888, image565);
+	threshold(THRESHOLD, image888);
 
 	FILE *fpout = fopen("out.raw", "wb");
 	if (!fpout) {
@@ -57,7 +80,7 @@ int main(int argc, char **argv)
 
 	fwrite(image888, size888, 1, fpout);
 	fclose(fpout);
-	printf("Output: out.raw (RGB888)\n");
+	printf("Output: out.raw (RGB888) with threshold %d\n", THRESHOLD);
 _error:
 	free(image565);
 	free(image888);
