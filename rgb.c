@@ -69,7 +69,7 @@ void smooth(unsigned char *image888)
 
 int main(int argc, char **argv)
 {
-	if (argc < 2) {
+	if (argc < 4) {
 		printf("Usage: %s [file]\n", argv[0]);
 		exit(1);
 	}
@@ -92,6 +92,11 @@ int main(int argc, char **argv)
 
 	image_save(image, "out.raw");
 	printf("Output: out.raw (RGB888) with threshold %d\n", THRESHOLD);
+
+	struct image *block = image_new(BLOCK_X, BLOCK_Y);
+	image_getblock(image, block, atoi(argv[2]), atoi(argv[3]));
+	image_save(block, "block.raw");
+	image_destroy(block);
 
 	free(image565);
 	image_destroy(image);

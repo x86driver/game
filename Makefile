@@ -27,11 +27,11 @@ frame:frame.c
 	$(ARMCC) -o $@ $< $(CFLAGS)
 
 image.o:image.c image.h
-	$(GCC) -o $@ $< -Wall -c
+	$(GCC) -o $@ $< -Wall -c -g
 
 rgb:rgb.c image.o
 	$(GCC) -o $@ $^ -Wall -g
 
 clean:
-	rm -rf $(TARGET)
+	rm -rf $(TARGET) *.o
 

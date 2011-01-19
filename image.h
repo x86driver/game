@@ -6,6 +6,9 @@
 #define WIDTH 320
 #define HEIGHT 480
 
+#define BLOCK_X 58
+#define BLOCK_Y 58
+
 struct image {
 	int width, height;
 	unsigned char *buf;
@@ -13,6 +16,7 @@ struct image {
 
 void image_load(struct image *img, const char *file);
 void image_save(struct image *img, const char *file);
+void image_getblock(const struct image * const img, struct image *block, int ix, int iy);
 
 static inline struct image *image_new(int width, int height)
 {
@@ -32,19 +36,21 @@ static inline void image_destroy(struct image *img)
 	}
 }
 
-static inline void getpixel(unsigned char *image888, int x, int y,
+static inline void getpixel(const struct image * const image, int x, int y,
         unsigned char *r, unsigned char *g, unsigned char *b)
 {
-        image888 += (x+y*WIDTH)*3;
+	unsigned char *image888 = image->buf;
+        image888 += (x+y*image->width)*3;
         *b = *image888++;
         *g = *image888++;
         *r = *image888;
 }
 
-static inline void setpixel(unsigned char *image888, int x, int y,
+static inline void setpixel(struct image *image, int x, int y,
         unsigned char r, unsigned char g, unsigned b)
 {
-        image888 += (x+y*WIDTH)*3;
+	unsigned char *image888 = image->buf;
+        image888 += (x+y*image->width)*3;
         *image888++ = b;
         *image888++ = g;
         *image888 = r;
