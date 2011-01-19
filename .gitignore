@@ -1,2 +1,4 @@
 game
-
+*.raw
+frame
+rgb
