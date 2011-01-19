@@ -26,8 +26,11 @@ event:event.c
 frame:frame.c
 	$(ARMCC) -o $@ $< $(CFLAGS)
 
-rgb:rgb.c
-	$(GCC) -o $@ $< -Wall -g
+image.o:image.c image.h
+	$(GCC) -o $@ $< -Wall -c
+
+rgb:rgb.c image.o
+	$(GCC) -o $@ $^ -Wall -g
 
 clean:
 	rm -rf $(TARGET)

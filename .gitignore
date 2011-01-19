@@ -2,3 +2,4 @@ game
 *.raw
 frame
 rgb
+*.o

@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#define WIDTH 320
-#define HEIGHT 480
+#include "image.h"
 
 #define RGB565_MASK_RED        0xF800
 #define RGB565_MASK_GREEN                         0x07E0
@@ -50,24 +48,6 @@ void threshold(int thres, unsigned char *rgb24)
 	}
 }
 
-static inline void getpixel(unsigned char *image888, int x, int y,
-	unsigned char *r, unsigned char *g, unsigned char *b)
-{
-	image888 += (x+y*WIDTH)*3;
-	*b = *image888++;
-	*g = *image888++;
-	*r = *image888;
-}
-
-static inline void setpixel(unsigned char *image888, int x, int y,
-	unsigned char r, unsigned char g, unsigned b)
-{
-	image888 += (x+y*WIDTH)*3;
-	*image888++ = b;
-	*image888++ = g;
-	*image888 = r;
-}
-
 void smooth(unsigned char *image888)
 {
 #define BLOCK 3
@@ -101,42 +81,20 @@ int main(int argc, char **argv)
 	}
 
 	int size565 = WIDTH*HEIGHT*2;
-	int size888 = WIDTH*HEIGHT*3;
 	unsigned short *image565 = (unsigned short*)malloc(size565);
-	unsigned char *image888 = (unsigned char*)malloc(size888);
+//	unsigned char *image888 = (unsigned char*)malloc(size888);
+	struct image *image = image_new(WIDTH, HEIGHT);
 
 	fread(image565, size565, 1, fp);
-	rgb565_2_rgb24(image888, image565);
-//test
-	int x, y;
-	unsigned char *my888 = (unsigned char*)malloc(size888);
-	unsigned char r, g, b;
-	for (y = 0; y < HEIGHT; ++y) {
-		for (x = 0; x < WIDTH; ++x) {
-			getpixel(image888, x, y, &r, &g, &b);
-			setpixel(my888, x, y, r, g, b);
-		}
-	}
-	FILE *out888 = fopen("same.raw", "wb");
-	fwrite(my888, size888, 1, out888);
-	fclose(out888);
-	free(my888);
-//end test
+	rgb565_2_rgb24(image->buf, image565);
 
-//	threshold(THRESHOLD, image888);
+	threshold(THRESHOLD, image->buf);
 
-	FILE *fpout = fopen("out.raw", "wb");
-	if (!fpout) {
-		perror("out.raw");
-		goto _error;
-	}
-
-	fwrite(image888, size888, 1, fpout);
-	fclose(fpout);
+	image_save(image, "out.raw");
 	printf("Output: out.raw (RGB888) with threshold %d\n", THRESHOLD);
-_error:
+
 	free(image565);
-	free(image888);
+	image_destroy(image);
 	fclose(fp);
 	return 0;
 }
