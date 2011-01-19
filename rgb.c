@@ -50,6 +50,43 @@ void threshold(int thres, unsigned char *rgb24)
 	}
 }
 
+static inline void getpixel(unsigned char *image888, int x, int y,
+	unsigned char *r, unsigned char *g, unsigned char *b)
+{
+	image888 += x*y*3;
+	*b = *image888++;
+	*g = *image888++;
+	*r = *image888;
+}
+
+static inline void setpixel(unsigned char *image888, int x, int y,
+	unsigned char r, unsigned char g, unsigned b)
+{
+	image888 += x*y*3;
+	*image888++ = b;
+	*image888++ = g;
+	*image888++ = r;
+}
+
+void smooth(unsigned char *image888)
+{
+#define BLOCK 3
+	int x, y, i, j, val;
+	int ix, iy;
+	for (y = BLOCK/2; y < HEIGHT - BLOCK/2; ++y) {
+		for (x = BLOCK/2; x < WIDTH - BLOCK/2; ++x) {
+			val = 0;
+			for (i = 0; i < BLOCK; ++i) {
+				for (j = 0; j < BLOCK; ++j) {
+					ix = x + j - BLOCK / 2;
+					iy = y + i - BLOCK / 2;
+//					val += (*(rgb24+ix)
+				}
+			}
+		}
+	}
+}
+
 int main(int argc, char **argv)
 {
 	if (argc < 2) {
@@ -70,7 +107,23 @@ int main(int argc, char **argv)
 
 	fread(image565, size565, 1, fp);
 	rgb565_2_rgb24(image888, image565);
-	threshold(THRESHOLD, image888);
+//test
+	int x, y;
+	unsigned char *my888 = (unsigned char*)malloc(size888);
+	unsigned char r, g, b;
+	for (y = 0; y < HEIGHT; ++y) {
+		for (x = 0; x < WIDTH; ++x) {
+			getpixel(image888, x, y, &r, &g, &b);
+			setpixel(my888, x, y, r, g, b);
+		}
+	}
+	FILE *out888 = fopen("same.raw", "wb");
+	fwrite(my888, size888, 1, out888);
+	fclose(out888);
+	free(my888);
+//end test
+
+//	threshold(THRESHOLD, image888);
 
 	FILE *fpout = fopen("out.raw", "wb");
 	if (!fpout) {
