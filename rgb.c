@@ -53,7 +53,7 @@ void threshold(int thres, unsigned char *rgb24)
 static inline void getpixel(unsigned char *image888, int x, int y,
 	unsigned char *r, unsigned char *g, unsigned char *b)
 {
-	image888 += x*y*3;
+	image888 += (x+y*WIDTH)*3;
 	*b = *image888++;
 	*g = *image888++;
 	*r = *image888;
@@ -62,10 +62,10 @@ static inline void getpixel(unsigned char *image888, int x, int y,
 static inline void setpixel(unsigned char *image888, int x, int y,
 	unsigned char r, unsigned char g, unsigned b)
 {
-	image888 += x*y*3;
+	image888 += (x+y*WIDTH)*3;
 	*image888++ = b;
 	*image888++ = g;
-	*image888++ = r;
+	*image888 = r;
 }
 
 void smooth(unsigned char *image888)
