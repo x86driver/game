@@ -1,4 +1,4 @@
-TARGET = game frame rgb
+TARGET = game frame rgb cal
 CPU = arm
 #CPU = x86
 
@@ -31,6 +31,9 @@ image.o:image.c image.h
 
 rgb:rgb.c image.o
 	$(GCC) -o $@ $^ -Wall -g
+
+cal:cal.c
+	$(GCC) -o $@ $< -Wall -O2
 
 clean:
 	rm -rf $(TARGET) *.o
