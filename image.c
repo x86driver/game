@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "image.h"
 
 #define OFF_X 12
@@ -38,3 +39,10 @@ void image_getblock(const struct image * const img, struct image *block, int ix,
 		}
 	}
 }
+
+void image_append(struct image *dst, const struct image * const src, int ix)
+{
+	memcpy(dst->buf + (src->width*src->height*3*ix), src->buf, (src->width*src->height*3));
+}
+
+

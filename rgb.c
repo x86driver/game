@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "image.h"
+#include "font.h"
 
 #define RGB565_MASK_RED        0xF800
 #define RGB565_MASK_GREEN                         0x07E0
@@ -97,6 +98,8 @@ int main(int argc, char **argv)
 	image_getblock(image, block, atoi(argv[2]), atoi(argv[3]));
 	image_save(block, "block.raw");
 	image_destroy(block);
+
+	create_font_image(image);
 
 	free(image565);
 	image_destroy(image);

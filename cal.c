@@ -1,15 +1,15 @@
 #include <stdio.h>
 
 #define MIN_I 0
-#define MAX_I 40
+#define MAX_I 1
 
-#define MIN_J 50
-#define MAX_J 70
+#define MIN_J 30
+#define MAX_J 60
 
 #define MIN_K 0
 #define MAX_K 30
 
-#define WIDTH 320
+#define WIDTH 290
 
 int main()
 {

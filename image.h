@@ -17,6 +17,7 @@ struct image {
 void image_load(struct image *img, const char *file);
 void image_save(struct image *img, const char *file);
 void image_getblock(const struct image * const img, struct image *block, int ix, int iy);
+void image_append(struct image *dst, const struct image * const src, int ix);
 
 static inline struct image *image_new(int width, int height)
 {

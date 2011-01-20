@@ -29,7 +29,10 @@ frame:frame.c
 image.o:image.c image.h
 	$(GCC) -o $@ $< -Wall -c -g
 
-rgb:rgb.c image.o
+font.o:font.c font.h
+	$(GCC) -o $@ $< -Wall -c -g
+
+rgb:rgb.c image.o font.o
 	$(GCC) -o $@ $^ -Wall -g
 
 cal:cal.c
