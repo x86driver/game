@@ -6,8 +6,8 @@
 #define WIDTH 320
 #define HEIGHT 480
 
-#define BLOCK_X 58
-#define BLOCK_Y 58
+#define BLOCK_X 52
+#define BLOCK_Y 46
 
 struct image {
 	int width, height;
