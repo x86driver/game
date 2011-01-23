@@ -1,4 +1,6 @@
+#include <string.h>
 #include "image.h"
+
 
 void create_font_image(struct image *image)
 {
@@ -37,3 +39,7 @@ void create_font_image(struct image *image)
 	image_destroy(font);
 }
 
+void font_getimage(struct image *input, struct image *output, int idx)
+{
+	memcpy(output->buf, input->buf + BLOCK_X*BLOCK_Y*PIXEL*idx, BLOCK_X*BLOCK_Y*PIXEL);
+}

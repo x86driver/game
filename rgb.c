@@ -97,9 +97,25 @@ int main(int argc, char **argv)
 	struct image *block = image_new(BLOCK_X, BLOCK_Y);
 	image_getblock(image, block, atoi(argv[2]), atoi(argv[3]));
 	image_save(block, "block.raw");
-	image_destroy(block);
+//	image_destroy(block);
 
-	create_font_image(image);
+//	create_font_image(image);
+
+// test font image
+	struct image *font = image_new(BLOCK_X, BLOCK_Y*50);
+	struct image *outblk = image_new(BLOCK_X, BLOCK_Y);
+	image_load(font, "data.raw");
+	font_getimage(font, outblk, 0);
+	int i;
+	for (i = 0; i < 50; ++i) {
+		font_getimage(font, outblk, i);
+		printf("[%d] weight: %d\n", i, image_weight(outblk, block));
+	}
+
+	image_destroy(block);
+	image_destroy(font);
+	image_destroy(outblk);
+// =========================
 
 	free(image565);
 	image_destroy(image);
