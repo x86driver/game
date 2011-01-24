@@ -3,9 +3,9 @@
 
 #include <string.h>
 
-unsigned char *screen_init();
-void screen_destroy(unsigned char *rgb565);
-void screen_capture(unsigned char *rgb565);
+unsigned short *screen_init();
+void screen_destroy(unsigned short *rgb565);
+void screen_capture(unsigned short *rgb565);
 
 #endif
 

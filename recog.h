@@ -3,7 +3,7 @@
 
 #include "image.h"
 
-int recognize_font(struct image *block, struct image *font);
-void recognize(struct image *image, struct image *font, struct Glyph *glyph);
+int recognize_font(struct image *block, struct image *font, int range);
+void recognize(struct image *image, struct image *font, struct Glyph *glyph, int range);
 
 #endif

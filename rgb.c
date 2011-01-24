@@ -6,6 +6,7 @@
 #include "font.h"
 #include "recog.h"
 #include "event.h"
+#include "screen.h"
 
 #define RGB565_MASK_RED        0xF800
 #define RGB565_MASK_GREEN                         0x07E0
@@ -13,7 +14,7 @@
 
 #define THRESHOLD 247
 
-void rgb565_2_rgb24(unsigned char *rgb24, unsigned short *rgb565)
+void rgb565_to_rgb24(unsigned char *rgb24, unsigned short *rgb565)
 {
 	unsigned int i = 0;
 	unsigned char R, G, B;
@@ -73,49 +74,39 @@ void smooth(unsigned char *image888)
 
 int main(int argc, char **argv)
 {
-	if (argc < 2) {
-		printf("Usage: %s [file]\n", argv[0]);
-		exit(1);
-	}
-
-	FILE *fp = fopen(argv[1], "rb");
-	if (!fp) {
-		perror(argv[1]);
-		exit(1);
-	}
-
-	int size565 = WIDTH*HEIGHT*2;
-	unsigned short *image565 = (unsigned short*)malloc(size565);
+	unsigned short *image565 = screen_init();
 	struct image *image = image_new(WIDTH, HEIGHT);
-
-	fread(image565, size565, 1, fp);
-	rgb565_2_rgb24(image->buf, image565);
-
-	threshold(THRESHOLD, image->buf);
-
-	image_save(image, "out.raw");
-	printf("Output: out.raw (RGB888) with threshold %d\n", THRESHOLD);
-
 	struct image *font = image_new(BLOCK_X, BLOCK_Y*50);
-	image_load(font, "data.raw");
 	struct Glyph glyph[50];
-	memset(glyph, 0, sizeof(glyph));
-	recognize(image, font, glyph);
+	int i;
 
 	event_init();
-	int i;
+	image_load(font, "data.raw");
+	memset(glyph, 0, sizeof(glyph));
+
+	screen_capture(image565);
+	rgb565_to_rgb24(image->buf, image565);
+	threshold(THRESHOLD, image->buf);
+	recognize(image, font, glyph, 0);
+
 	for (i = 0; i < 25; ++i) {
 		send_touch(glyph[i].x, glyph[i].y);
 		usleep(100);
 	}
 
+/*
+	screen_capture(image565);
+
+	for (i = 24; i < 50; ++i) {
+		send_touch(glyph[i].x, glyph[i].y);
+		usleep(100);
+	}
+*/
+
 	image_destroy(font);
 	event_destroy();
-// =========================
-
 	free(image565);
 	image_destroy(image);
-	fclose(fp);
 	return 0;
 }
 
