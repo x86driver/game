@@ -6,5 +6,10 @@
 void create_font_image(struct image *image);
 void font_getimage(struct image *input, struct image *output, int idx);
 
+struct Glyph {
+	int number;
+	int x, y;
+};
+
 #endif
 

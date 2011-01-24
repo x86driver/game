@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "image.h"
 #include "font.h"
+#include "recog.h"
 
 #define RGB565_MASK_RED        0xF800
 #define RGB565_MASK_GREEN                         0x07E0
@@ -101,20 +103,38 @@ int main(int argc, char **argv)
 
 //	create_font_image(image);
 
-// test font image
+// test
+/*
 	struct image *font = image_new(BLOCK_X, BLOCK_Y*50);
 	struct image *outblk = image_new(BLOCK_X, BLOCK_Y);
 	image_load(font, "data.raw");
-	font_getimage(font, outblk, 0);
-	int i;
-	for (i = 0; i < 50; ++i) {
-		font_getimage(font, outblk, i);
-		printf("[%d] weight: %d\n", i, image_weight(outblk, block));
+	int i, j;
+	for (j = 0; j < 5; ++j) {
+		for (i = 0; i < 5; ++i) {
+			image_getblock(image, outblk, i, j);
+			//printf("%02d  ", recognize_font(outblk, font));
+			recognize_font(outblk, font);
+		}
+		printf("\n");
 	}
+	printf("\n");
 
-	image_destroy(block);
 	image_destroy(font);
 	image_destroy(outblk);
+*/
+
+	struct image *font = image_new(BLOCK_X, BLOCK_Y*50);
+	image_load(font, "data.raw");
+//	struct Glyph *glyph = (struct Glyph*)malloc(sizeof(struct Glyph)*50);
+	struct Glyph glyph[50];
+	memset(glyph, 0, sizeof(glyph));
+	recognize(image, font, glyph);
+	int i;
+	for (i = 0; i < 50; ++i) {
+		printf("[%d] %d, %d\n", glyph[i].number, glyph[i].x, glyph[i].y);
+	}
+	image_destroy(font);
+//	free(glyph);
 // =========================
 
 	free(image565);

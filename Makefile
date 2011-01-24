@@ -26,13 +26,16 @@ event:event.c
 frame:frame.c
 	$(ARMCC) -o $@ $< $(CFLAGS)
 
+recog.o:recog.c
+	$(GCC) -o $@ $< -Wall -c -g
+
 image.o:image.c image.h
 	$(GCC) -o $@ $< -Wall -c -g
 
 font.o:font.c font.h
 	$(GCC) -o $@ $< -Wall -c -g
 
-rgb:rgb.c image.o font.o
+rgb:rgb.c image.o font.o recog.o
 	$(GCC) -o $@ $^ -Wall -g
 
 cal:cal.c

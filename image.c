@@ -45,10 +45,10 @@ void image_append(struct image *dst, const struct image * const src, int ix)
 	memcpy(dst->buf + (src->width*src->height*PIXEL*ix), src->buf, (src->width*src->height*PIXEL));
 }
 
-int image_weight(struct image *src, struct image *dst)
+unsigned int image_weight(struct image *src, struct image *dst)
 {
 	int i, j;
-	int weight = 0;
+	unsigned int weight = 0;
 	unsigned char r, g, b, r1, g1, b1;
 
 	for (j = 0; j < src->height; j += 2) {
