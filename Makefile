@@ -27,6 +27,9 @@ event:event.c
 frame:frame.c
 	$(ARMCC) -o $@ $< $(CFLAGS)
 
+screen.o:screen.c screen.h
+	$(GCC) -o $@ $< -c $(CFLAGS)
+
 event.o:event.c event.h
 	$(GCC) -o $@ $< -c $(CFLAGS)
 
@@ -39,7 +42,7 @@ image.o:image.c image.h
 font.o:font.c font.h
 	$(GCC) -o $@ $< -c $(CFLAGS)
 
-rgb:rgb.c image.o font.o recog.o event.o
+rgb:rgb.c image.o font.o recog.o event.o screen.o
 	$(GCC) -o $@ $^ $(CFLAGS)
 
 cal:cal.c
