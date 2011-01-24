@@ -5,6 +5,7 @@
 #include "image.h"
 #include "font.h"
 #include "recog.h"
+#include "event.h"
 
 #define RGB565_MASK_RED        0xF800
 #define RGB565_MASK_GREEN                         0x07E0
@@ -72,7 +73,7 @@ void smooth(unsigned char *image888)
 
 int main(int argc, char **argv)
 {
-	if (argc < 4) {
+	if (argc < 2) {
 		printf("Usage: %s [file]\n", argv[0]);
 		exit(1);
 	}
@@ -85,7 +86,6 @@ int main(int argc, char **argv)
 
 	int size565 = WIDTH*HEIGHT*2;
 	unsigned short *image565 = (unsigned short*)malloc(size565);
-//	unsigned char *image888 = (unsigned char*)malloc(size888);
 	struct image *image = image_new(WIDTH, HEIGHT);
 
 	fread(image565, size565, 1, fp);
@@ -96,45 +96,21 @@ int main(int argc, char **argv)
 	image_save(image, "out.raw");
 	printf("Output: out.raw (RGB888) with threshold %d\n", THRESHOLD);
 
-	struct image *block = image_new(BLOCK_X, BLOCK_Y);
-	image_getblock(image, block, atoi(argv[2]), atoi(argv[3]));
-	image_save(block, "block.raw");
-//	image_destroy(block);
-
-//	create_font_image(image);
-
-// test
-/*
-	struct image *font = image_new(BLOCK_X, BLOCK_Y*50);
-	struct image *outblk = image_new(BLOCK_X, BLOCK_Y);
-	image_load(font, "data.raw");
-	int i, j;
-	for (j = 0; j < 5; ++j) {
-		for (i = 0; i < 5; ++i) {
-			image_getblock(image, outblk, i, j);
-			//printf("%02d  ", recognize_font(outblk, font));
-			recognize_font(outblk, font);
-		}
-		printf("\n");
-	}
-	printf("\n");
-
-	image_destroy(font);
-	image_destroy(outblk);
-*/
-
 	struct image *font = image_new(BLOCK_X, BLOCK_Y*50);
 	image_load(font, "data.raw");
-//	struct Glyph *glyph = (struct Glyph*)malloc(sizeof(struct Glyph)*50);
 	struct Glyph glyph[50];
 	memset(glyph, 0, sizeof(glyph));
 	recognize(image, font, glyph);
+
+	event_init();
 	int i;
-	for (i = 0; i < 50; ++i) {
-		printf("[%d] %d, %d\n", glyph[i].number, glyph[i].x, glyph[i].y);
+	for (i = 0; i < 25; ++i) {
+		send_touch(glyph[i].x, glyph[i].y);
+		usleep(100);
 	}
+
 	image_destroy(font);
-//	free(glyph);
+	event_destroy();
 // =========================
 
 	free(image565);

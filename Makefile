@@ -3,7 +3,8 @@ CPU = arm
 #CPU = x86
 
 ARMCC = arm-none-linux-gnueabi-gcc
-GCC = gcc
+#GCC = gcc
+GCC = arm-none-linux-gnueabi-gcc
 
 ifeq ($(CPU),arm)
 CC = arm-none-linux-gnueabi-gcc
@@ -26,17 +27,20 @@ event:event.c
 frame:frame.c
 	$(ARMCC) -o $@ $< $(CFLAGS)
 
+event.o:event.c event.h
+	$(GCC) -o $@ $< -c $(CFLAGS)
+
 recog.o:recog.c
-	$(GCC) -o $@ $< -Wall -c -g
+	$(GCC) -o $@ $< -c $(CFLAGS)
 
 image.o:image.c image.h
-	$(GCC) -o $@ $< -Wall -c -g
+	$(GCC) -o $@ $< -c $(CFLAGS)
 
 font.o:font.c font.h
-	$(GCC) -o $@ $< -Wall -c -g
+	$(GCC) -o $@ $< -c $(CFLAGS)
 
-rgb:rgb.c image.o font.o recog.o
-	$(GCC) -o $@ $^ -Wall -g
+rgb:rgb.c image.o font.o recog.o event.o
+	$(GCC) -o $@ $^ $(CFLAGS)
 
 cal:cal.c
 	$(GCC) -o $@ $< -Wall -O2
