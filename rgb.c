@@ -12,7 +12,7 @@
 #define RGB565_MASK_GREEN                         0x07E0
 #define RGB565_MASK_BLUE                         0x001F
 
-#define THRESHOLD 247
+#define THRESHOLD 200
 
 void rgb565_to_rgb24(unsigned char *rgb24, unsigned short *rgb565)
 {
