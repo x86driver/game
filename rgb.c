@@ -53,25 +53,6 @@ void threshold(int thres, unsigned char *rgb24)
 	}
 }
 
-void smooth(unsigned char *image888)
-{
-#define BLOCK 3
-	int x, y, i, j, val;
-	int ix, iy;
-	for (y = BLOCK/2; y < HEIGHT - BLOCK/2; ++y) {
-		for (x = BLOCK/2; x < WIDTH - BLOCK/2; ++x) {
-			val = 0;
-			for (i = 0; i < BLOCK; ++i) {
-				for (j = 0; j < BLOCK; ++j) {
-					ix = x + j - BLOCK / 2;
-					iy = y + i - BLOCK / 2;
-//					val += (*(rgb24+ix)
-				}
-			}
-		}
-	}
-}
-
 int main(int argc, char **argv)
 {
 	unsigned short *image565 = screen_init();
@@ -84,7 +65,9 @@ int main(int argc, char **argv)
 	image_load(font, "data.raw");
 	memset(glyph, 0, sizeof(glyph));
 
-#if 1
+	printf("Press any key to start...\n");
+	getc(stdin);
+
 	screen_capture(image565);
 	rgb565_to_rgb24(image->buf, image565);
 	threshold(THRESHOLD, image->buf);
@@ -94,19 +77,20 @@ int main(int argc, char **argv)
 		send_touch(glyph[i].x, glyph[i].y);
 		usleep(100);
 	}
-#endif
 
 	printf("\n\n");
-	sleep(3);
+	getc(stdin);
 
 	screen_capture(image565);
 	rgb565_to_rgb24(image->buf, image565);
 	threshold(THRESHOLD, image->buf);
 	recognize(image, font, glyph, 1);
 
+/*
 	for (i = 24; i < 50; ++i) {
 		printf("[%d] %d,%d\n", glyph[i].number, glyph[i].x, glyph[i].y);
 	}
+*/
 
 	for (i = 24; i < 50; ++i) {
 		send_touch(glyph[i].x, glyph[i].y);
@@ -115,9 +99,9 @@ int main(int argc, char **argv)
 
 	image_destroy(font);
 	event_destroy();
-	free(image565);
 	image_destroy(image);
 	screen_destroy(image565);
+
 	return 0;
 }
 

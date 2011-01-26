@@ -18,8 +18,8 @@ int recognize_font(struct image *block, struct image *font, int range)
 		stop = 50;
 	}
 
-//	for (i = from; i < stop; ++i) {
-	for (i = 0; i < 50; ++i) {
+	for (i = from; i < stop; ++i) {
+//	for (i = 0; i < 50; ++i) {
 		font_getimage(font, tmpblk, i);
 		w = image_weight(tmpblk, block);
 //		printf("[%d] weight: %d\n", i, w);
