@@ -61,6 +61,7 @@ int main(int argc, char **argv)
 	struct Glyph glyph[50];
 	int i;
 
+	recognize_init();
 	event_init();
 	image_load(font, "data.raw");
 	memset(glyph, 0, sizeof(glyph));
