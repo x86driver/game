@@ -2,6 +2,14 @@
 #include "font.h"
 
 #include <stdio.h>
+#include <string.h>
+
+static int font_array[50];
+
+void recognize_init()
+{
+	memset(&font_array[0], 0, sizeof(font_array));
+}
 
 int recognize_font(struct image *block, struct image *font, int range)
 {
@@ -20,6 +28,8 @@ int recognize_font(struct image *block, struct image *font, int range)
 
 	for (i = from; i < stop; ++i) {
 //	for (i = 0; i < 50; ++i) {
+		if (font_array[i] == 1)
+			continue;
 		font_getimage(font, tmpblk, i);
 		w = image_weight(tmpblk, block);
 //		printf("[%d] weight: %d\n", i, w);
@@ -30,6 +40,7 @@ int recognize_font(struct image *block, struct image *font, int range)
 	}
 //	printf("[%d] = %d\n", ret+1, w);
 	image_destroy(tmpblk);
+	font_array[ret] = 1;
 	return ret;
 }
 

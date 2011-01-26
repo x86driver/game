@@ -48,6 +48,9 @@ rgb:rgb.c image.o font.o recog.o event.o screen.o
 cal:cal.c
 	$(GCC) -o $@ $< -Wall -O2
 
+up:rgb
+	adb push rgb /storage
+
 clean:
 	rm -rf $(TARGET) *.o
 
