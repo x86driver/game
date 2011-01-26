@@ -18,7 +18,8 @@ int recognize_font(struct image *block, struct image *font, int range)
 		stop = 50;
 	}
 
-	for (i = from; i < stop; ++i) {
+//	for (i = from; i < stop; ++i) {
+	for (i = 0; i < 50; ++i) {
 		font_getimage(font, tmpblk, i);
 		w = image_weight(tmpblk, block);
 //		printf("[%d] weight: %d\n", i, w);
@@ -29,7 +30,7 @@ int recognize_font(struct image *block, struct image *font, int range)
 	}
 //	printf("[%d] = %d\n", ret+1, w);
 	image_destroy(tmpblk);
-	return ret+1;
+	return ret;
 }
 
 void recognize(struct image *image, struct image *font, struct Glyph *glyph, int range)
@@ -42,11 +43,13 @@ void recognize(struct image *image, struct image *font, struct Glyph *glyph, int
 		for (i = 0; i < 5; ++i) {
 			image_getblock(image, outblk, i, j);
 			number = recognize_font(outblk, font, range);
-			glyptr = glyph + (number - 1);
-			glyptr->number = number;
+			glyptr = glyph + (number);
+			glyptr->number = number+1;
 			glyptr->x = i;
 			glyptr->y = j;
+			printf("%02d  ", number+1);
 		}
+		printf("\n");
 	}
 
 	image_destroy(outblk);

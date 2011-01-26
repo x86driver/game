@@ -13,7 +13,6 @@
 
 static int screen_fd;
 static struct fb_var_screeninfo screen;
-static unsigned char *data;
 
 unsigned short *screen_init()
 {
@@ -21,23 +20,25 @@ unsigned short *screen_init()
 	if (screen_fd == -1)
 		perror(FRAMEBUFFER);
 	ioctl(screen_fd, FBIOGET_VSCREENINFO, &screen);
-	data = (unsigned char *)mmap(NULL, screen.xres*screen.yres*(screen.bits_per_pixel/8),
-		PROT_READ, MAP_SHARED, screen_fd, 0);
-	if (data == MAP_FAILED)
-		perror("mmap");
 	return (unsigned short*)malloc(screen.xres*screen.yres*(screen.bits_per_pixel/8));
 }
 
 void screen_destroy(unsigned short *rgb565)
 {
-	munmap(data, screen.xres*screen.yres);
 	close(screen_fd);
 	free(rgb565);
 }
 
 void screen_capture(unsigned short *rgb565)
 {
+	unsigned char *data = (unsigned char *)mmap(NULL, screen.xres*screen.yres*(screen.bits_per_pixel/8),
+                PROT_READ, MAP_SHARED, screen_fd, 0);
+        if (data == MAP_FAILED)
+                perror("mmap");
+
 	memcpy(rgb565, data, screen.xres*screen.yres*(screen.bits_per_pixel/8));
+
+	munmap(data, screen.xres*screen.yres);
 }
 
 /*

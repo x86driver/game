@@ -84,6 +84,7 @@ int main(int argc, char **argv)
 	image_load(font, "data.raw");
 	memset(glyph, 0, sizeof(glyph));
 
+#if 1
 	screen_capture(image565);
 	rgb565_to_rgb24(image->buf, image565);
 	threshold(THRESHOLD, image->buf);
@@ -93,20 +94,30 @@ int main(int argc, char **argv)
 		send_touch(glyph[i].x, glyph[i].y);
 		usleep(100);
 	}
+#endif
 
-/*
+	printf("\n\n");
+	sleep(3);
+
 	screen_capture(image565);
+	rgb565_to_rgb24(image->buf, image565);
+	threshold(THRESHOLD, image->buf);
+	recognize(image, font, glyph, 1);
+
+	for (i = 24; i < 50; ++i) {
+		printf("[%d] %d,%d\n", glyph[i].number, glyph[i].x, glyph[i].y);
+	}
 
 	for (i = 24; i < 50; ++i) {
 		send_touch(glyph[i].x, glyph[i].y);
 		usleep(100);
 	}
-*/
 
 	image_destroy(font);
 	event_destroy();
 	free(image565);
 	image_destroy(image);
+	screen_destroy(image565);
 	return 0;
 }
 
